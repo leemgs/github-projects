@@ -71,7 +71,7 @@
       </div>
       <div class="content">
         <h1>Published Projects</h1>
-        <p class="lead">The 18 websites and web apps published with GitHub Pages from repositories owned by <a href="https://github.com/leemgs/">github.com/leemgs</a>. Projects are displayed in alphabetical order.</p>
+        <p class="lead">Websites and web apps published with GitHub Pages from repositories owned by <a href="https://github.com/leemgs/">github.com/leemgs</a>. Projects are displayed in alphabetical order.</p>
         <label class="search-label" for="project-search">Search projects</label>
         <input id="project-search" class="project-search" type="search" placeholder="Search by project name or language…" autocomplete="off">
         <div id="status" class="status" role="status">Loading published projects…</div>
@@ -89,11 +89,7 @@
     const search = document.querySelector('#project-search');
     const endpoint = 'https://api.github.com/users/leemgs/repos?per_page=100&type=owner&sort=updated';
 
-    fetch(endpoint, {headers:{Accept:'application/vnd.github+json'}})
-      .then(response => {
-        if (!response.ok) throw new Error('GitHub returned ' + response.status);
-        return response.json();
-      })
+    loadRepositories()
       .then(repositories => {
         const published = repositories
           .filter(repo => repo.has_pages && repo.name !== 'leemgs.github.io')
@@ -158,9 +154,32 @@
         filterProjects();
       })
       .catch(error => {
-        status.innerHTML = 'The live project list could not be loaded. <a href="https://github.com/leemgs?tab=repositories">Browse the repositories on GitHub</a>.';
+        status.innerHTML = 'The project list could not be loaded. <a href="https://github.com/leemgs?tab=repositories">Browse the repositories on GitHub</a>.';
         console.error(error);
       });
+
+    async function loadRepositories() {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000);
+
+      try {
+        const response = await fetch(endpoint, {
+          headers: {Accept: 'application/vnd.github+json'},
+          signal: controller.signal
+        });
+        if (!response.ok) throw new Error('GitHub returned ' + response.status);
+        const repositories = await response.json();
+        if (!Array.isArray(repositories)) throw new Error('GitHub returned an invalid response');
+        return repositories;
+      } catch (error) {
+        console.warn('Using the bundled project list because GitHub is unavailable.', error);
+        const fallback = await fetch('./projects.json');
+        if (!fallback.ok) throw new Error('Bundled project list returned ' + fallback.status);
+        return fallback.json();
+      } finally {
+        clearTimeout(timeout);
+      }
+    }
 
     function filterProjects() {
       const query = search.value.trim().toLocaleLowerCase();

@@ -1,0 +1,146 @@
+[
+  {
+    "name": "ai-society-lab",
+    "has_pages": true,
+    "homepage": "https://leemgs.github.io/ai-society-lab/",
+    "html_url": "https://github.com/leemgs/ai-society-lab",
+    "language": "HTML",
+    "pushed_at": "2025-12-09T04:25:52Z",
+    "updated_at": "2025-12-09T04:28:52Z"
+  },
+  {
+    "name": "ai-usage",
+    "has_pages": true,
+    "homepage": "https://leemgs.github.io/ai-usage/",
+    "html_url": "https://github.com/leemgs/ai-usage",
+    "language": "JavaScript",
+    "pushed_at": "2026-08-18T10:56:38Z",
+    "updated_at": "2026-08-18T10:56:46Z"
+  },
+  {
+    "name": "bucket-list",
+    "has_pages": true,
+    "homepage": "https://leemgs.github.io/bucket-list/",
+    "html_url": "https://github.com/leemgs/bucket-list",
+    "language": "HTML",
+    "pushed_at": "2026-08-12T23:09:56Z",
+    "updated_at": "2026-08-12T23:10:00Z"
+  },
+  {
+    "name": "conference_field",
+    "has_pages": true,
+    "homepage": "https://leemgs.github.io/conference_field/",
+    "html_url": "https://github.com/leemgs/conference_field",
+    "language": "Python",
+    "pushed_at": "2026-08-22T18:22:28Z",
+    "updated_at": "2026-08-22T18:22:35Z"
+  },
+  {
+    "name": "conference_kiise",
+    "has_pages": true,
+    "homepage": "https://leemgs.github.io/conference_kiise/",
+    "html_url": "https://github.com/leemgs/conference_kiise",
+    "language": "Python",
+    "pushed_at": "2026-08-21T09:28:39Z",
+    "updated_at": "2026-08-21T09:31:19Z"
+  },
+  {
+    "name": "github-projects",
+    "has_pages": true,
+    "homepage": null,
+    "html_url": "https://github.com/leemgs/github-projects",
+    "language": null,
+    "pushed_at": "2026-08-23T00:59:55Z",
+    "updated_at": "2026-08-23T01:00:15Z"
+  },
+  {
+    "name": "mymemo",
+    "has_pages": true,
+    "homepage": "https://leemgs.github.io/mymemo/",
+    "html_url": "https://github.com/leemgs/mymemo",
+    "language": "JavaScript",
+    "pushed_at": "2026-08-22T09:04:05Z",
+    "updated_at": "2026-08-22T09:04:19Z"
+  },
+  {
+    "name": "myoci",
+    "has_pages": true,
+    "homepage": "https://myoci.mooo.com/",
+    "html_url": "https://github.com/leemgs/myoci",
+    "language": "Shell",
+    "pushed_at": "2026-08-18T10:48:33Z",
+    "updated_at": "2026-08-18T10:50:52Z"
+  },
+  {
+    "name": "stock-alert",
+    "has_pages": true,
+    "homepage": "https://leemgs.github.io/stock-alert/",
+    "html_url": "https://github.com/leemgs/stock-alert",
+    "language": "Python",
+    "pushed_at": "2026-08-22T22:20:37Z",
+    "updated_at": "2026-08-22T22:20:40Z"
+  },
+  {
+    "name": "stock-quant-trader-kis",
+    "has_pages": true,
+    "homepage": "https://leemgs.github.io/stock-quant-trader-kis/",
+    "html_url": "https://github.com/leemgs/stock-quant-trader-kis",
+    "language": "Python",
+    "pushed_at": "2026-08-23T00:27:10Z",
+    "updated_at": "2026-08-23T00:27:33Z"
+  },
+  {
+    "name": "truthprint",
+    "has_pages": true,
+    "homepage": "https://leemgs.github.io/truthprint/",
+    "html_url": "https://github.com/leemgs/truthprint",
+    "language": "TeX",
+    "pushed_at": "2026-07-24T08:07:52Z",
+    "updated_at": "2026-07-24T08:08:31Z"
+  },
+  {
+    "name": "used-notifier",
+    "has_pages": true,
+    "homepage": "https://leemgs.github.io/used-notifier/",
+    "html_url": "https://github.com/leemgs/used-notifier",
+    "language": "JavaScript",
+    "pushed_at": "2026-08-18T11:11:54Z",
+    "updated_at": "2026-08-18T11:12:09Z"
+  },
+  {
+    "name": "web-ssh",
+    "has_pages": true,
+    "homepage": "https://leemgs.github.io/web-ssh/",
+    "html_url": "https://github.com/leemgs/web-ssh",
+    "language": null,
+    "pushed_at": "2026-08-21T01:38:23Z",
+    "updated_at": "2026-08-21T01:38:27Z"
+  },
+  {
+    "name": "webinar",
+    "has_pages": true,
+    "homepage": "https://leemgs.github.io/webinar/",
+    "html_url": "https://github.com/leemgs/webinar",
+    "language": "Python",
+    "pushed_at": "2026-08-22T23:36:50Z",
+    "updated_at": "2026-08-22T23:36:56Z"
+  },
+  {
+    "name": "weekend-farm",
+    "has_pages": true,
+    "homepage": null,
+    "html_url": "https://github.com/leemgs/weekend-farm",
+    "language": null,
+    "pushed_at": "2026-08-23T00:56:07Z",
+    "updated_at": "2026-08-23T00:56:53Z"
+  },
+  {
+    "name": "with-people",
+    "has_pages": true,
+    "homepage": "https://leemgs.github.io/with-people/",
+    "html_url": "https://github.com/leemgs/with-people",
+    "language": "Python",
+    "pushed_at": "2026-08-21T06:43:40Z",
+    "updated_at": "2026-08-21T06:44:19Z"
+  }
+]
