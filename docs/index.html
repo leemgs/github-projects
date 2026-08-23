@@ -7,6 +7,48 @@
   <title>Geunsik Lim — Github Projects</title>
   <link rel="icon" href="/favicon.ico">
   <link rel="stylesheet" href="/site-shell.css">
+  <style>
+    .titlebar {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+    .titlebar::before { content: none; }
+    .window-controls {
+      display: inline-flex;
+      flex: 0 0 auto;
+      gap: .45rem;
+    }
+    .window-control {
+      width: .75rem;
+      height: .75rem;
+      border: 1px solid rgba(0, 0, 0, .08);
+      border-radius: 50%;
+    }
+    .window-control.close { background: #ff5f57; }
+    .window-control.minimize { background: #febc2e; }
+    .window-control.maximize { background: #28c840; }
+    .project-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: .45rem .8rem;
+      margin: .7rem 0 0;
+      color: #52647a;
+      font-size: .9rem;
+    }
+    .project-language {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+    }
+    .language-marker {
+      width: .65rem;
+      height: .65rem;
+      border-radius: 2px;
+      background: #60758f;
+    }
+  </style>
 </head>
 <body>
   <nav class="site-menu" aria-label="Main menu">
@@ -15,12 +57,19 @@
 </nav>
   <main class="shell">
     <article class="window">
-      <div class="titlebar">Github Projects</div>
+      <div class="titlebar">
+        <span class="window-controls" aria-hidden="true">
+          <span class="window-control close"></span>
+          <span class="window-control minimize"></span>
+          <span class="window-control maximize"></span>
+        </span>
+        <span>Github Projects</span>
+      </div>
       <div class="content">
         <h1>Published Projects</h1>
         <p class="lead">The 18 websites and web apps published with GitHub Pages from repositories owned by <a href="https://github.com/leemgs/">github.com/leemgs</a>. Projects are displayed in alphabetical order.</p>
         <label class="search-label" for="project-search">Search projects</label>
-        <input id="project-search" class="project-search" type="search" placeholder="Search by project name or URL…" autocomplete="off">
+        <input id="project-search" class="project-search" type="search" placeholder="Search by project name or language…" autocomplete="off">
         <div id="status" class="status" role="status">Loading published projects…</div>
         <div id="projects" class="project-grid" aria-live="polite"></div>
         <noscript><p class="status">JavaScript is required to retrieve the current project list. You can browse all repositories at <a href="https://github.com/leemgs?tab=repositories">GitHub</a>.</p></noscript>
@@ -51,7 +100,12 @@
             : `https://leemgs.github.io/${encodeURIComponent(repo.name)}/`;
           const card = document.createElement('article');
           card.className = 'project';
-          card.dataset.search = `${repo.name} ${url} ${repo.html_url}`.toLocaleLowerCase();
+          const language = repo.language || 'Not specified';
+          const lastUpdated = new Date(repo.pushed_at || repo.updated_at);
+          const formattedDate = new Intl.DateTimeFormat('en', {
+            year: 'numeric', month: 'short', day: 'numeric'
+          }).format(lastUpdated);
+          card.dataset.search = `${repo.name} ${language}`.toLocaleLowerCase();
           const heading = document.createElement('div');
           heading.className = 'project-heading';
           const siteLink = document.createElement('a');
@@ -76,15 +130,22 @@
           repoIcon.height = 24;
           repoLink.append(repoIcon);
           heading.append(siteLink, repoLink);
-          const addressLink = document.createElement('a');
-          addressLink.className = 'project-address';
-          addressLink.href = url;
-          addressLink.target = '_blank';
-          addressLink.rel = 'noopener';
-          const address = document.createElement('span');
-          address.textContent = url;
-          addressLink.append(address);
-          card.append(heading, addressLink);
+          const metadata = document.createElement('p');
+          metadata.className = 'project-meta';
+          const updated = document.createElement('span');
+          updated.append('Updated ');
+          const updatedTime = document.createElement('time');
+          updatedTime.dateTime = lastUpdated.toISOString();
+          updatedTime.textContent = formattedDate;
+          updated.append(updatedTime);
+          const languageLabel = document.createElement('span');
+          languageLabel.className = 'project-language';
+          const languageMarker = document.createElement('span');
+          languageMarker.className = 'language-marker';
+          languageMarker.setAttribute('aria-hidden', 'true');
+          languageLabel.append(languageMarker, language);
+          metadata.append(updated, languageLabel);
+          card.append(heading, metadata);
           projects.append(card);
         });
         filterProjects();
