@@ -56,9 +56,35 @@
       color: #fff;
       font-weight: 600;
     }
+    .language-menu {
+      display: flex;
+      justify-content: flex-end;
+      gap: .4rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: .8rem 1rem;
+    }
+    .language-menu button {
+      padding: .4rem .75rem;
+      border: 1px solid rgba(255, 255, 255, .55);
+      border-radius: 999px;
+      background: transparent;
+      color: #fff;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 600;
+    }
+    .language-menu button[aria-pressed="true"] {
+      background: #fff;
+      color: #173a67;
+    }
   </style>
 </head>
 <body>
+  <nav class="language-menu" aria-label="Language selection">
+    <button type="button" data-language="en" aria-pressed="true">English</button>
+    <button type="button" data-language="ko" aria-pressed="false">한국어</button>
+  </nav>
   <main class="shell">
     <article class="window">
       <div class="titlebar">
@@ -67,12 +93,12 @@
           <span class="window-control minimize"></span>
           <span class="window-control maximize"></span>
         </span>
-        <span>Github Projects</span>
+        <span id="window-title">Github Projects</span>
       </div>
       <div class="content">
-        <h1>Published Projects</h1>
-        <p class="lead">Websites and web apps published with GitHub Pages from repositories owned by <a href="https://github.com/leemgs/">github.com/leemgs</a>. Projects are displayed in alphabetical order.</p>
-        <label class="search-label" for="project-search">Search projects</label>
+        <h1 id="page-heading">Published Projects</h1>
+        <p id="page-lead" class="lead">Websites and web apps published with GitHub Pages from repositories owned by <a href="https://github.com/leemgs/">github.com/leemgs</a>. Projects are displayed in alphabetical order.</p>
+        <label id="search-label" class="search-label" for="project-search">Search projects</label>
         <input id="project-search" class="project-search" type="search" placeholder="Search by project name or language…" autocomplete="off">
         <div id="status" class="status" role="status">Loading published projects…</div>
         <div id="projects" class="project-grid" aria-live="polite"></div>
@@ -87,76 +113,144 @@
     const projects = document.querySelector('#projects');
     const status = document.querySelector('#status');
     const search = document.querySelector('#project-search');
+    const languageButtons = document.querySelectorAll('[data-language]');
     const endpoint = 'https://api.github.com/users/leemgs/repos?per_page=100&type=owner&sort=updated';
+    const translations = {
+      en: {
+        languageMenu: 'Language selection',
+        windowTitle: 'Github Projects',
+        heading: 'Published Projects',
+        lead: 'Websites and web apps published with GitHub Pages from repositories owned by <a href="https://github.com/leemgs/">github.com/leemgs</a>. Projects are displayed in alphabetical order.',
+        searchLabel: 'Search projects',
+        searchPlaceholder: 'Search by project name or language…',
+        loading: 'Loading published projects…',
+        updated: 'Updated',
+        unspecified: 'Not specified',
+        count: count => `${count} published project${count === 1 ? '' : 's'}`,
+        noProjects: 'No separately published project was found.',
+        matches: count => `${count} matching project${count === 1 ? '' : 's'}`,
+        loadError: 'The project list could not be loaded. <a href="https://github.com/leemgs?tab=repositories">Browse the repositories on GitHub</a>.'
+      },
+      ko: {
+        languageMenu: '언어 선택',
+        windowTitle: 'Github 프로젝트',
+        heading: '공개 프로젝트',
+        lead: '<a href="https://github.com/leemgs/">github.com/leemgs</a> 소유 저장소에서 GitHub Pages로 공개한 웹사이트와 웹 앱입니다. 프로젝트는 알파벳순으로 표시됩니다.',
+        searchLabel: '프로젝트 검색',
+        searchPlaceholder: '프로젝트 이름 또는 개발 언어로 검색…',
+        loading: '공개 프로젝트를 불러오는 중…',
+        updated: '최종 수정',
+        unspecified: '미지정',
+        count: count => `공개 프로젝트 ${count}개`,
+        noProjects: '별도로 공개된 프로젝트가 없습니다.',
+        matches: count => `검색 결과 ${count}개`,
+        loadError: '프로젝트 목록을 불러올 수 없습니다. <a href="https://github.com/leemgs?tab=repositories">GitHub에서 저장소 보기</a>.'
+      }
+    };
+    let currentLanguage = localStorage.getItem('projects-language')
+      || (navigator.language.toLowerCase().startsWith('ko') ? 'ko' : 'en');
+    let loadedRepositories = null;
+
+    applyLanguage(currentLanguage);
 
     loadRepositories()
       .then(repositories => {
-        const published = repositories
+        loadedRepositories = repositories
           .filter(repo => repo.has_pages && repo.name !== 'leemgs.github.io')
           .sort((left, right) => left.name.localeCompare(right.name, 'en', {sensitivity:'base'}));
-        status.textContent = published.length
-          ? `${published.length} published project${published.length === 1 ? '' : 's'}`
-          : 'No separately published project was found.';
-        published.forEach(repo => {
-          const url = repo.homepage && /^https?:\/\//.test(repo.homepage)
-            ? repo.homepage
-            : `https://leemgs.github.io/${encodeURIComponent(repo.name)}/`;
-          const card = document.createElement('article');
-          card.className = 'project';
-          const language = repo.language || 'Not specified';
-          const lastUpdated = new Date(repo.pushed_at || repo.updated_at);
-          const formattedDate = new Intl.DateTimeFormat('en', {
-            year: 'numeric', month: 'short', day: 'numeric'
-          }).format(lastUpdated);
-          card.dataset.search = `${repo.name} ${language}`.toLocaleLowerCase();
-          const heading = document.createElement('div');
-          heading.className = 'project-heading';
-          const siteLink = document.createElement('a');
-          siteLink.className = 'project-name';
-          siteLink.href = url;
-          siteLink.target = '_blank';
-          siteLink.rel = 'noopener';
-          const name = document.createElement('strong');
-          name.textContent = repo.name;
-          siteLink.append(name);
-          const repoLink = document.createElement('a');
-          repoLink.className = 'repo-icon-link';
-          repoLink.href = repo.html_url;
-          repoLink.target = '_blank';
-          repoLink.rel = 'noopener';
-          repoLink.title = `${repo.name} GitHub repository`;
-          repoLink.setAttribute('aria-label', `${repo.name} GitHub repository`);
-          const repoIcon = document.createElement('img');
-          repoIcon.src = '/github-mark.svg';
-          repoIcon.alt = '';
-          repoIcon.width = 24;
-          repoIcon.height = 24;
-          repoLink.append(repoIcon);
-          heading.append(siteLink, repoLink);
-          const metadata = document.createElement('p');
-          metadata.className = 'project-meta';
-          const updated = document.createElement('span');
-          updated.append('Updated ');
-          const updatedTime = document.createElement('time');
-          updatedTime.dateTime = lastUpdated.toISOString();
-          updatedTime.textContent = formattedDate;
-          updated.append(updatedTime);
-          const languageLabel = document.createElement('span');
-          languageLabel.className = 'project-language';
-          const languageMarker = document.createElement('span');
-          languageMarker.className = 'language-marker';
-          languageMarker.setAttribute('aria-hidden', 'true');
-          languageLabel.append(languageMarker, language);
-          metadata.append(updated, languageLabel);
-          card.append(heading, metadata);
-          projects.append(card);
-        });
-        filterProjects();
+        renderProjects();
       })
       .catch(error => {
-        status.innerHTML = 'The project list could not be loaded. <a href="https://github.com/leemgs?tab=repositories">Browse the repositories on GitHub</a>.';
+        status.innerHTML = translations[currentLanguage].loadError;
         console.error(error);
       });
+
+    function renderProjects() {
+      const text = translations[currentLanguage];
+      projects.replaceChildren();
+      status.textContent = loadedRepositories.length
+        ? text.count(loadedRepositories.length)
+        : text.noProjects;
+      loadedRepositories.forEach(repo => {
+        const url = repo.homepage && /^https?:\/\//.test(repo.homepage)
+          ? repo.homepage
+          : `https://leemgs.github.io/${encodeURIComponent(repo.name)}/`;
+        const card = document.createElement('article');
+        card.className = 'project';
+        const language = repo.language || text.unspecified;
+        const lastUpdated = new Date(repo.pushed_at || repo.updated_at);
+        const formattedDate = new Intl.DateTimeFormat(currentLanguage === 'ko' ? 'ko-KR' : 'en', {
+          year: 'numeric', month: 'short', day: 'numeric'
+        }).format(lastUpdated);
+        card.dataset.search = `${repo.name} ${language}`.toLocaleLowerCase();
+        const heading = document.createElement('div');
+        heading.className = 'project-heading';
+        const siteLink = document.createElement('a');
+        siteLink.className = 'project-name';
+        siteLink.href = url;
+        siteLink.target = '_blank';
+        siteLink.rel = 'noopener';
+        const name = document.createElement('strong');
+        name.textContent = repo.name;
+        siteLink.append(name);
+        const repoLink = document.createElement('a');
+        repoLink.className = 'repo-icon-link';
+        repoLink.href = repo.html_url;
+        repoLink.target = '_blank';
+        repoLink.rel = 'noopener';
+        repoLink.title = `${repo.name} GitHub repository`;
+        repoLink.setAttribute('aria-label', `${repo.name} GitHub repository`);
+        const repoIcon = document.createElement('img');
+        repoIcon.src = '/github-mark.svg';
+        repoIcon.alt = '';
+        repoIcon.width = 24;
+        repoIcon.height = 24;
+        repoLink.append(repoIcon);
+        heading.append(siteLink, repoLink);
+        const metadata = document.createElement('p');
+        metadata.className = 'project-meta';
+        const updated = document.createElement('span');
+        updated.append(text.updated + ' ');
+        const updatedTime = document.createElement('time');
+        updatedTime.dateTime = lastUpdated.toISOString();
+        updatedTime.textContent = formattedDate;
+        updated.append(updatedTime);
+        const languageLabel = document.createElement('span');
+        languageLabel.className = 'project-language';
+        const languageMarker = document.createElement('span');
+        languageMarker.className = 'language-marker';
+        languageMarker.setAttribute('aria-hidden', 'true');
+        languageLabel.append(languageMarker, language);
+        metadata.append(updated, languageLabel);
+        card.append(heading, metadata);
+        projects.append(card);
+      });
+      filterProjects();
+    }
+
+    function applyLanguage(language) {
+      currentLanguage = translations[language] ? language : 'en';
+      const text = translations[currentLanguage];
+      document.documentElement.lang = currentLanguage;
+      document.querySelector('.language-menu').setAttribute('aria-label', text.languageMenu);
+      document.querySelector('#window-title').textContent = text.windowTitle;
+      document.querySelector('#page-heading').textContent = text.heading;
+      document.querySelector('#page-lead').innerHTML = text.lead;
+      document.querySelector('#search-label').textContent = text.searchLabel;
+      search.placeholder = text.searchPlaceholder;
+      languageButtons.forEach(button => {
+        button.setAttribute('aria-pressed', String(button.dataset.language === currentLanguage));
+      });
+      if (loadedRepositories) renderProjects();
+      else status.textContent = text.loading;
+    }
+
+    languageButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        localStorage.setItem('projects-language', button.dataset.language);
+        applyLanguage(button.dataset.language);
+      });
+    });
 
     async function loadRepositories() {
       const controller = new AbortController();
@@ -189,7 +283,7 @@
         card.hidden = !matches;
         if (matches) visible += 1;
       });
-      if (query) status.textContent = `${visible} matching project${visible === 1 ? '' : 's'}`;
+      if (query) status.textContent = translations[currentLanguage].matches(visible);
     }
     search.addEventListener('input', filterProjects);
   </script>
