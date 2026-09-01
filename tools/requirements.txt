@@ -1,0 +1,2 @@
+# Sealed-box (libsodium) encryption required by the GitHub Actions secrets API.
+PyNaCl>=1.5.0
