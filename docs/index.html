@@ -107,6 +107,8 @@
     </article>
     <footer class="page-footer">
       <a href="https://github.com/leemgs/github-projects">Github</a>
+      <span aria-hidden="true" style="opacity:.5; margin:0 .5rem;">·</span>
+      <a href="./secrets.html" id="footer-secrets-link">Bulk secret updater</a>
     </footer>
   </main>
   <script>
@@ -129,7 +131,8 @@
         count: count => `${count} published project${count === 1 ? '' : 's'}`,
         noProjects: 'No separately published project was found.',
         matches: count => `${count} matching project${count === 1 ? '' : 's'}`,
-        loadError: 'The project list could not be loaded. <a href="https://github.com/leemgs?tab=repositories">Browse the repositories on GitHub</a>.'
+        loadError: 'The project list could not be loaded. <a href="https://github.com/leemgs?tab=repositories">Browse the repositories on GitHub</a>.',
+        footerSecrets: 'Bulk secret updater'
       },
       ko: {
         languageMenu: '언어 선택',
@@ -144,7 +147,8 @@
         count: count => `공개 프로젝트 ${count}개`,
         noProjects: '별도로 공개된 프로젝트가 없습니다.',
         matches: count => `검색 결과 ${count}개`,
-        loadError: '프로젝트 목록을 불러올 수 없습니다. <a href="https://github.com/leemgs?tab=repositories">GitHub에서 저장소 보기</a>.'
+        loadError: '프로젝트 목록을 불러올 수 없습니다. <a href="https://github.com/leemgs?tab=repositories">GitHub에서 저장소 보기</a>.',
+        footerSecrets: '일괄 시크릿 변경기'
       }
     };
     let currentLanguage = localStorage.getItem('projects-language')
@@ -238,6 +242,8 @@
       document.querySelector('#page-lead').innerHTML = text.lead;
       document.querySelector('#search-label').textContent = text.searchLabel;
       search.placeholder = text.searchPlaceholder;
+      const footerSecrets = document.querySelector('#footer-secrets-link');
+      if (footerSecrets) footerSecrets.textContent = text.footerSecrets;
       languageButtons.forEach(button => {
         button.setAttribute('aria-pressed', String(button.dataset.language === currentLanguage));
       });
