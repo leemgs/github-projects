@@ -56,35 +56,138 @@
       color: #fff;
       font-weight: 600;
     }
-    .language-menu {
+    /* ---- Top navigation bar ---- */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(15, 33, 62, .72);
+      backdrop-filter: saturate(160%) blur(12px);
+      -webkit-backdrop-filter: saturate(160%) blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, .12);
+      box-shadow: 0 6px 24px rgba(6, 16, 33, .18);
+    }
+    .topbar-inner {
       display: flex;
-      justify-content: flex-end;
-      gap: .4rem;
+      align-items: center;
+      gap: 1rem;
       max-width: 1100px;
       margin: 0 auto;
-      padding: .8rem 1rem;
+      padding: .6rem 1rem;
     }
-    .language-menu button {
-      padding: .4rem .75rem;
-      border: 1px solid rgba(255, 255, 255, .55);
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: .55rem;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 700;
+      letter-spacing: .01em;
+      white-space: nowrap;
+    }
+    .brand img {
+      width: 26px;
+      height: 26px;
+      filter: invert(1);
+      flex: 0 0 auto;
+    }
+    .brand-name { font-size: 1.02rem; }
+    .topnav {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      margin-left: auto;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .topnav-link {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      padding: .45rem .8rem;
+      border-radius: 999px;
+      text-decoration: none;
+      color: #eaf1fb;
+      font-weight: 600;
+      font-size: .92rem;
+      border: 1px solid transparent;
+      transition: background .15s ease, border-color .15s ease, transform .12s ease;
+    }
+    .topnav-link svg { width: 17px; height: 17px; flex: 0 0 auto; }
+    .topnav-link:hover {
+      background: rgba(255, 255, 255, .12);
+      border-color: rgba(255, 255, 255, .18);
+    }
+    .topnav-link.accent {
+      background: linear-gradient(135deg, #4f8cff, #2f6fd0);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(30, 82, 168, .45);
+    }
+    .topnav-link.accent:hover {
+      transform: translateY(-1px);
+      background: linear-gradient(135deg, #5c96ff, #3a7ade);
+      border-color: transparent;
+    }
+    .nav-divider {
+      width: 1px;
+      height: 22px;
+      background: rgba(255, 255, 255, .22);
+      margin: 0 .2rem;
+    }
+    .lang-group {
+      display: inline-flex;
+      gap: .3rem;
+      padding: .2rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .08);
+    }
+    .lang-group button {
+      padding: .32rem .7rem;
+      border: 0;
       border-radius: 999px;
       background: transparent;
-      color: #fff;
+      color: #dce6f5;
       cursor: pointer;
       font: inherit;
       font-weight: 600;
+      font-size: .88rem;
+      transition: background .15s ease, color .15s ease;
     }
-    .language-menu button[aria-pressed="true"] {
+    .lang-group button[aria-pressed="true"] {
       background: #fff;
       color: #173a67;
+    }
+    @media (max-width: 620px) {
+      .topbar-inner { flex-wrap: wrap; gap: .5rem; }
+      .brand-name { font-size: .95rem; }
+      .topnav { width: 100%; }
     }
   </style>
 </head>
 <body>
-  <nav class="language-menu" aria-label="Language selection">
-    <button type="button" data-language="en" aria-pressed="true">English</button>
-    <button type="button" data-language="ko" aria-pressed="false">한국어</button>
-  </nav>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="./" aria-label="Github Projects home">
+        <img src="/github-mark.svg" alt="">
+        <span class="brand-name" id="brand-name">Github Projects</span>
+      </a>
+      <nav class="topnav" id="primary-nav" aria-label="Primary">
+        <a class="topnav-link" id="nav-github" href="https://github.com/leemgs/github-projects" target="_blank" rel="noopener">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+          <span id="nav-github-text">Github</span>
+        </a>
+        <a class="topnav-link accent" id="nav-secrets" href="./secrets.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+          <span id="nav-secrets-text">Bulk secret updater</span>
+        </a>
+        <span class="nav-divider" aria-hidden="true"></span>
+        <span class="lang-group" id="lang-group" role="group" aria-label="Language selection">
+          <button type="button" data-language="en" aria-pressed="true">EN</button>
+          <button type="button" data-language="ko" aria-pressed="false">한국어</button>
+        </span>
+      </nav>
+    </div>
+  </header>
   <main class="shell">
     <article class="window">
       <div class="titlebar">
@@ -106,9 +209,7 @@
       </div>
     </article>
     <footer class="page-footer">
-      <a href="https://github.com/leemgs/github-projects">Github</a>
-      <span aria-hidden="true" style="opacity:.5; margin:0 .5rem;">·</span>
-      <a href="./secrets.html" id="footer-secrets-link">Bulk secret updater</a>
+      <a href="https://github.com/leemgs/github-projects">github.com/leemgs/github-projects</a>
     </footer>
   </main>
   <script>
@@ -121,6 +222,8 @@
       en: {
         languageMenu: 'Language selection',
         windowTitle: 'Github Projects',
+        brand: 'Github Projects',
+        navGithub: 'Github',
         heading: 'Published Projects',
         lead: 'Websites and web apps published with GitHub Pages from repositories owned by <a href="https://github.com/leemgs/">github.com/leemgs</a>. Projects are displayed in alphabetical order.',
         searchLabel: 'Search projects',
@@ -137,6 +240,8 @@
       ko: {
         languageMenu: '언어 선택',
         windowTitle: 'Github 프로젝트',
+        brand: 'Github 프로젝트',
+        navGithub: 'Github',
         heading: '공개 프로젝트',
         lead: '<a href="https://github.com/leemgs/">github.com/leemgs</a> 소유 저장소에서 GitHub Pages로 공개한 웹사이트와 웹 앱입니다. 프로젝트는 알파벳순으로 표시됩니다.',
         searchLabel: '프로젝트 검색',
@@ -236,14 +341,16 @@
       currentLanguage = translations[language] ? language : 'en';
       const text = translations[currentLanguage];
       document.documentElement.lang = currentLanguage;
-      document.querySelector('.language-menu').setAttribute('aria-label', text.languageMenu);
+      const langGroup = document.querySelector('#lang-group');
+      if (langGroup) langGroup.setAttribute('aria-label', text.languageMenu);
       document.querySelector('#window-title').textContent = text.windowTitle;
+      document.querySelector('#brand-name').textContent = text.brand;
+      document.querySelector('#nav-github-text').textContent = text.navGithub;
+      document.querySelector('#nav-secrets-text').textContent = text.footerSecrets;
       document.querySelector('#page-heading').textContent = text.heading;
       document.querySelector('#page-lead').innerHTML = text.lead;
       document.querySelector('#search-label').textContent = text.searchLabel;
       search.placeholder = text.searchPlaceholder;
-      const footerSecrets = document.querySelector('#footer-secrets-link');
-      if (footerSecrets) footerSecrets.textContent = text.footerSecrets;
       languageButtons.forEach(button => {
         button.setAttribute('aria-pressed', String(button.dataset.language === currentLanguage));
       });
